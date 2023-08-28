@@ -21,6 +21,20 @@ interface ProfileDrawerProps {
   }
 }
 
+const theme = localStorage.getItem('theme');
+
+let divClassName = `flex h-full flex-col overflow-y-scroll py-6 shadow-xl`;
+let divClassNameV2 = `mb-2`;
+let divClassNameV3 = `mt-1 text-sm text-gray-900 sm:col-span-2`;
+
+if (theme == "dark") {
+  divClassName += ` bg-gray-800`;
+  divClassNameV2 += ` text-white`;
+  divClassNameV3 += ` text-white`;
+} else {
+  divClassName += ` bg-white`;
+}
+
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   isOpen,
   onClose,
@@ -81,7 +95,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                   leaveTo="translate-x-full"
                 >
                   <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                    <div className={divClassName}>
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-end">
                           <div className="ml-3 flex h-7 items-center">
@@ -101,70 +115,40 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                           <div className="mb-2">
                             {data.isGroup ? <AvatarGroup users={data.users} /> : <Avatar user={otherUser} />}
                           </div>
-                          <div>
+                          <div className={divClassNameV2}>
                             {title}
                           </div>
                           <div className="text-sm text-gray-500">
                             {statusText}
                           </div>
-                          <div className="flex gap-10 my-8">
-                            <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
-                              <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">
-                                <IoTrash size={20} />
-                              </div>
-                              <div className="text-sm font-light text-neutral-600">
-                                Delete
-                              </div>
-                            </div>
-                          </div>
+                          {/*<div className="flex gap-10 my-8">*/}
+                          {/*  <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">*/}
+                          {/*    <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">*/}
+                          {/*      <IoTrash size={20} />*/}
+                          {/*    </div>*/}
+                          {/*    <div className="text-sm font-light text-neutral-600">*/}
+                          {/*      Delete*/}
+                          {/*    </div>*/}
+                          {/*  </div>*/}
+                          {/*</div>*/}
                         <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                         <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                           {data.isGroup && (
                             <div>
-                              <dt 
-                                className="
-                                  text-sm 
-                                  font-medium 
-                                  text-gray-500 
-                                  sm:w-40 
-                                  sm:flex-shrink-0
-                                "
-                              >
+                              <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                 Emails
                               </dt>
-                              <dd 
-                                className="
-                                  mt-1 
-                                  text-sm 
-                                  text-gray-900 
-                                  sm:col-span-2
-                                "
-                              >
+                              <dd className={divClassNameV3}>
                                 {data.users.map((user) => user.email).join(', ')}
                               </dd>
                             </div>
                           )}
                           {!data.isGroup && (
                             <div>
-                              <dt 
-                                className="
-                                  text-sm 
-                                  font-medium 
-                                  text-gray-500 
-                                  sm:w-40 
-                                  sm:flex-shrink-0
-                                "
-                              >
+                              <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 ">
                                 Email
                               </dt>
-                              <dd 
-                                className="
-                                  mt-1 
-                                  text-sm 
-                                  text-gray-900 
-                                  sm:col-span-2
-                                "
-                              >
+                              <dd className={divClassNameV3}>
                                 {otherUser.email}
                               </dd>
                             </div>
@@ -173,25 +157,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             <>
                               <hr />
                               <div>
-                                <dt 
-                                  className="
-                                    text-sm 
-                                    font-medium 
-                                    text-gray-500 
-                                    sm:w-40 
-                                    sm:flex-shrink-0
-                                  "
-                                >
+                                <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                   Joined
                                 </dt>
-                                <dd 
-                                  className="
-                                    mt-1 
-                                    text-sm 
-                                    text-gray-900 
-                                    sm:col-span-2
-                                  "
-                                >
+                                <dd className={divClassNameV3}>
                                   <time dateTime={joinedDate}>
                                     {joinedDate}
                                   </time>

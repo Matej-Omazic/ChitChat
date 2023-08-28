@@ -22,22 +22,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   return (
       <>
         <SettingsModal currentUser={currentUser} isOpen={isOpen} onClose={() => setIsOpen(false)} />
-        <div className="
-        hidden
-        lg:fixed
-        lg:inset-x-0
-        lg:top-0
-        lg:z-40
-        lg:h-20
-        lg:overflow-x-auto
-        lg:border-b-[1px]
-        lg:pr-4
-        lg:flex
-        lg:flex-row
-        justify-between
-        pl-20
-        bg-blue-200
-      ">
+        <div className="hidden lg:fixed lg:inset-x-0 lg:top-0 lg:z-40 lg:h-20 lg:overflow-x-auto lg:border-b-[1px] lg:pr-4 lg:flex lg:flex-row justify-between pl-20 bg-blue-200 ">
           <nav className="mt-4 flex flex-row justify-between">
             <ul role="list" className="flex flex-row items-center space-x-1 ">
               

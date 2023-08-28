@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, {use, useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { User } from '@prisma/client';
@@ -52,31 +52,61 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     });
   }
 
+  console.log("THEME: ", currentUser.isDarkTheme)
+
+  const [isChecked, setIsChecked] = useState(currentUser.isDarkTheme || false);
+
+  let checkTheme= currentUser.isDarkTheme
+  let theme = ""
+  if(checkTheme){
+    theme = "dark"
+  }
+  else theme = "bright"
+
+  localStorage.setItem("theme", theme)
+
+  useEffect(() => {
+    if (isChecked) {
+      console.log("It is checked");
+
+    } else {
+      console.log("It is not checked");
+    }
+  }, [isChecked]);
+
+  let divClassName = `py-4 px-4 border-t flex items-center gap-2 lg:gap-4 w-full`;
+
+  if (theme == "dark") {
+    divClassName += ` bg-gray-800 border-gray-900`;
+  } else {
+    divClassName += ` bg-white`;
+  }
+
+  const handleCheckboxChange = () => {
+    setIsChecked(prevChecked => !prevChecked);
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
+    // Add the isDarkTheme property to the data object
+    data.isDarkTheme = isChecked;
+
     axios.post('/api/settings', data)
-    .then(() => {
-      router.refresh();
-      onClose();
-    })
-    .catch(() => toast.error('Something went wrong!'))
-    .finally(() => setIsLoading(false));
-  }
+        .then(() => {
+          router.refresh();
+          onClose();
+        })
+        .catch(() => toast.error('Something went wrong!'))
+        .finally(() => setIsLoading(false));
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 
-              className="
-                text-base 
-                font-semibold 
-                leading-7 
-                text-gray-900
-              "
-            >
+            <h2 className="text-base font-semibold leading-7 text-gray-900">
               Profile
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
@@ -93,16 +123,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 register={register}
               />
               <div>
-                <label 
-                  htmlFor="photo" 
-                  className="
-                    block 
-                    text-sm 
-                    font-medium 
-                    leading-6 
-                    text-gray-900
-                  "
-                >
+                <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
                   Photo
                 </label>
                 <div className="mt-2 flex items-center gap-x-3">
@@ -130,25 +151,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               
               <div>DARK MODE:
-              {currentUser.isDarkTheme ? (
-              <div>On</div>
-              ) : (
-              <div>Off</div>
-              )}
+                <div>
+                  <label className="theme-switch" htmlFor="checkbox">
+                    <input
+                        type="checkbox"
+                        id="isDarkTheme"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                    />
+                    <div className="slider round"></div>
+                  </label>
+                </div>
                </div>
             </div>
           </div>
         </div>
 
-        <div 
-          className="
-            mt-6 
-            flex 
-            items-center 
-            justify-end 
-            gap-x-6
-          "
-        >
+        <div className="mt-6 flex items-center justify-end gap-x-6">
           <Button 
             disabled={isLoading}
             secondary 

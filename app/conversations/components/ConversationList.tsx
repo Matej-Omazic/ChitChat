@@ -102,6 +102,16 @@ const ConversationList: React.FC<ConversationListProps> = ({
     setSearchTerm(e.target.value);
   };
 
+  const theme = localStorage.getItem('theme');
+
+  let divClassName = `w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`;
+
+  if (theme == "dark") {
+    divClassName += ` bg-gray-700`;
+  } else {
+    divClassName += ` `;
+  }
+
   return (
     <>
       <GroupChatModal
@@ -155,7 +165,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Search"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={divClassName}
             />
             <svg
               className="absolute right-3 top-3 h-5 w-5 text-gray-400"

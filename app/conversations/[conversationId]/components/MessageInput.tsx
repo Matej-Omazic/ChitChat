@@ -15,6 +15,16 @@ interface MessageInputProps {
   errors: FieldErrors
 }
 
+const theme = localStorage.getItem('theme');
+
+let divClassName = `font-light py-2 px-4 w-full rounded-full focus:outline-none`;
+
+if (theme == "dark") {
+  divClassName += ` text-white bg-gray-900`;
+} else {
+  divClassName += ` text-black bg-neutral-100`;
+}
+
 const MessageInput: React.FC<MessageInputProps> = ({ 
   placeholder, 
   id, 
@@ -30,17 +40,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         autoComplete={id}
         {...register(id, { required })}
         placeholder={placeholder}
-        className="
-          text-black
-          font-light
-          py-2
-          px-4
-          bg-neutral-100 
-          w-full 
-          rounded-full
-          focus:outline-none
-        "
-      />
+        className={divClassName}/>
     </div>
    );
 }

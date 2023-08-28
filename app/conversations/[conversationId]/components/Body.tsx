@@ -68,7 +68,6 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
         return currentMessage;
       }))
     };
-  
 
     pusherClient.bind('messages:new', messageHandler)
     pusherClient.bind('message:update', updateMessageHandler);
@@ -80,9 +79,21 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
     }
   }, [conversationId]);
 
+
+
+  const theme = localStorage.getItem('theme');
+
+  let divClassName = `flex-1 overflow-y-auto`;
+
+  if (theme == "dark") {
+    divClassName += ` bg-gray-800`;
+  } else {
+    divClassName += ` bg-white`;
+  }
+
   return ( 
     <>
-    <div className="flex-1 overflow-y-auto ">
+    <div className={divClassName}>
       {messages.map((message, i) => (
         <MessageBox 
           isLast={i === messages.length - 1} 

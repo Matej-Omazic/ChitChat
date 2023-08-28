@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
 
@@ -12,6 +11,7 @@ export async function POST(
     const {
       name,
       image,
+      isDarkTheme
     } = body;
 
     if (!currentUser?.id) {
@@ -24,7 +24,8 @@ export async function POST(
       },
       data: {
         image: image,
-        name: name
+        name: name,
+        isDarkTheme: isDarkTheme
       },
     });
 

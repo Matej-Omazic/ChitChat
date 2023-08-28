@@ -45,32 +45,25 @@ const AuthForm = () => {
       password: '',
     },
   });
-  
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
 
-    
-   
-
     if (variant === 'REGISTER') {
-      
       const {public_key, private_key} = await E2EE.getKeys();
-
       localStorage.setItem("private_key", private_key)
-  
     const obj = {
       data, public_key
     }
-
       axios
         .post('/api/register', obj,)
         .then(() => signIn('credentials', data))
         .catch(() => toast.error('Something went wrong!'))
         .finally(() => setIsLoading(false));
     }
-
     if (variant === 'LOGIN') {
+      // let theme="bright"
+      // localStorage.setItem("theme", theme)
       signIn('credentials', {
         ...data,
         redirect: false

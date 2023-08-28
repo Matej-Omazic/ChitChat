@@ -1,17 +1,20 @@
 import Link from "next/link";
 
 import clsx from "clsx";
+import React from "react";
 
 interface MobileItemProps {
   href: string;
   //icon: any;
   active?: boolean;
+  text: string;
   onClick?: () => void;
 }
 
 const MobileItem: React.FC<MobileItemProps> = ({ 
   href, 
-  //icon: Icon, 
+  //icon: Icon,
+  text,
   active,
   onClick
 }) => {
@@ -42,6 +45,7 @@ const MobileItem: React.FC<MobileItemProps> = ({
         active && 'bg-gray-100 text-black',
       )}>
       {/* <Icon className="h-6 w-6" /> */}
+      <div>{text}</div>
     </Link>
    );
 }

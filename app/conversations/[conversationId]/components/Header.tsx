@@ -12,12 +12,15 @@ import useActiveList from "@/app/hooks/useActiveList";
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from "./ProfileDrawer";
+import ConfirmModal from "@/app/conversations/[conversationId]/components/ConfirmModal";
 
 interface HeaderProps {
   conversation: Conversation & {
     users: User[]
   }
 }
+
+
 
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const otherUser = useOtherUser(conversation);
@@ -33,28 +36,49 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
     return isActive ? 'Active' : 'Offline'
   }, [conversation, isActive]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(prevState => !prevState);
+  };
+
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+
+  const theme = localStorage.getItem('theme');
+
+  let divClassName = `w-full flex border-b-[1px] sm:px-4 py-3 px-4 lg:px-6 justify-between items-center shadow-sm`;
+  let divClassNameV2 = `text-smtext-neutral-500`;
+  let divClassNameV3 = `flex flex-col`;
+  let divClassNameV4 = `absolute right-0 mt-2 py-2 w-48 border rounded-lg shadow-lg`;
+
+  if (theme == "dark") {
+    divClassName += ` bg-gray-800 border-gray-900`;
+    divClassNameV2 += ` font-light text-white`
+    divClassNameV3 += ` text-white`
+    divClassNameV4 += ` bg-gray-800`
+  } else {
+    divClassName += ` bg-white`;
+    divClassNameV2 += `  font-light`;
+    divClassNameV4 += ` bg-white`
+  }
+
+
   return (
   <>
+
+    <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+    />
     <ProfileDrawer 
       data={conversation} 
       isOpen={drawerOpen} 
       onClose={() => setDrawerOpen(false)}
     />
-    <div 
-      className="
-        bg-white 
-        w-full 
-        flex 
-        border-b-[1px] 
-        sm:px-4 
-        py-3 
-        px-4 
-        lg:px-6 
-        justify-between 
-        items-center 
-        shadow-sm
-      "
-    >
+    <div
+        className={divClassName}>
       <div className="flex gap-3 items-center">
         <Link
           href="/conversations" 
@@ -74,23 +98,64 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         ) : (
           <Avatar user={otherUser} />
         )}
-        <div className="flex flex-col">
+        <div className={divClassNameV3}>
           <div>{conversation.name || otherUser.name}</div>
-          <div className="text-sm font-light text-neutral-500">
+          <div className={divClassNameV2}>
             {statusText}
           </div>
         </div>
       </div>
-      <HiEllipsisHorizontal
-        size={32}
-        onClick={() => setDrawerOpen(true)}
-        className="
-          text-sky-500
-          cursor-pointer
-          hover:text-sky-600
-          transition
-        "
-      />
+      <div>
+
+        <div className="relative inline-block text-sky-500">
+          <button
+              onClick={toggleDropdown}
+              className="p-2 rounded-full hover:text-sky-600 transition ease-in-out duration-150 focus:outline-none focus:ring"
+          >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+              <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+          {isOpen && (
+              <div className={divClassNameV4}>
+                <button
+                    className="block px-4 py-2 text-sm text-left text-red-500 hover:bg-red-100 w-full focus:outline-none"
+                    onClick={() => setConfirmOpen(true)}
+                >
+                  Delete conversation
+                </button>
+                <button
+                    className="block px-4 py-2 text-sm text-left text-blue-500 hover:bg-blue-100 w-full focus:outline-none"
+                    onClick={() => setDrawerOpen(true)}
+                >
+                  User info
+                </button>
+              </div>
+          )}
+        </div>
+
+      </div>
+      {/*<HiEllipsisHorizontal*/}
+      {/*  size={32}*/}
+      {/*  onClick={() => setDrawerOpen(true)}*/}
+      {/*  className="*/}
+      {/*    text-sky-500*/}
+      {/*    cursor-pointer*/}
+      {/*    hover:text-sky-600*/}
+      {/*    transition*/}
+      {/*  "*/}
+      {/*/>*/}
     </div>
     </>
   );
