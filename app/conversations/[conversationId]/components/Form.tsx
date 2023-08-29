@@ -70,13 +70,13 @@ const Form: React.FC<FormProps> = ({recipientId}) => {
 
   return ( 
     <div className={divClassName}>
-      {/* <CldUploadButton 
-        options={{ maxFiles: 1 }} 
-        onUpload={handleUpload} 
-        uploadPreset="oal1jcee"
+       <CldUploadButton
+      options={{ maxFiles: 1 }}
+      onUpload={handleUpload}
+      uploadPreset="oal1jcee"
       >
-        <HiPhoto size={30} className="text-sky-500" />
-      </CldUploadButton> */}
+      <HiPhoto size={30} className="text-sky-500" />
+    </CldUploadButton>
       <form 
         onSubmit={handleSubmit(onSubmit)} 
         className="flex items-center gap-2 lg:gap-4 w-full"
@@ -88,21 +88,7 @@ const Form: React.FC<FormProps> = ({recipientId}) => {
           required 
           placeholder="Type a message"
         />
-        <button 
-          type="submit" 
-          className="
-            rounded-full 
-            p-2 
-            bg-sky-500 
-            cursor-pointer 
-            hover:bg-sky-600 
-            transition
-          "
-        >
-          {/* <HiPaperAirplane
-            size={18}
-            className="text-white"
-          /> */}
+        <button type="submit" className=" rounded-full p-2 bg-sky-500 cursor-pointer hover:bg-sky-600 transition ">
           <div className="text-white"> Send</div>
         </button>
       </form>

@@ -10,6 +10,8 @@ import { FullMessageType } from "@/app/types";
 import Avatar from "@/app/components/Avatar";
 import ImageModal from "./ImageModal";
 import E2EE from '@chatereum/react-e2ee';
+import { FiTrash2 } from 'react-icons/fi'; // Import the delete icon from a library like react-icons
+
 
 interface MessageBoxProps {
   data: FullMessageType;
@@ -80,55 +82,74 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   }
   },[])
 
-  return ( 
-    <div className={container}>
-      <div className={avatar}>
-        {/* <Avatar user={data.sender} /> */}
-      </div>
-      <div className={body}>
-        <div className="flex items-center gap-1">
-          <div className="text-sm text-gray-500">
-            {data.sender.name}
-          </div>
-          <div className="text-xs text-gray-400">
-            {format(new Date(data.createdAt), 'p')}
-          </div>
+  const handleDeleteMessage = async () => {
+    let deleteMsgId = data.id
+    if (deleteMsgId) { // Ensure that deleteMsgId is set before proceeding
+      try {
+        await fetch(`/api/messages/${deleteMsgId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // ... Other fetch options ...
+        });
+      } catch (error) {
+        console.error("Error deleting message:", error);
+      }
+    }
+  };
+
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  return (
+      <div className={container}>
+        <div className={avatar}>
+          {/* <Avatar user={data.sender} /> */}
         </div>
-        <div className={message}>
-          <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
-          {data.image ? (
-            <Image
-              alt="Image"
-              height="288"
-              width="288"
-              onClick={() => setImageModalOpen(true)} 
-              src={data.image} 
-              className="
-                object-cover 
-                cursor-pointer 
-                hover:scale-110 
-                transition 
-                translate
-              "
-            />
-          ) : (
-            <div>{data.body}</div>
+        <div className={body}>
+          <div className="flex items-center gap-1">
+            <div className="text-sm text-gray-500">
+              {data.sender.name}
+            </div>
+            <div className="text-xs text-gray-400">
+              {format(new Date(data.createdAt), 'p')}
+            </div>
+          </div>
+          <div className={message}>
+            <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
+            {data.image ? (
+                <Image
+                    alt="Image"
+                    height="288"
+                    width="288"
+                    onClick={() => setImageModalOpen(true)}
+                    src={data.image}
+                    className="object-cover cursor-pointer hover:scale-110 transition translate"
+                />
+            ) : (
+                <div className="flex items-center">
+                  {isOwn && (
+                      <span className="text-red-500 cursor-pointer hover:text-red-600 transition" onClick={handleDeleteMessage}>
+                        <FiTrash2 className="mr-1" />
+                      </span>
+                  )}
+                  <span>{data.body}</span>
+                </div>
+
+            )}
+          </div>
+          {isLast && isOwn && seenList.length > 0 && (
+              <div className="text-xs font-light text-gray-500">
+                {`Seen by ${seenList}`}
+              </div>
           )}
         </div>
-        {isLast && isOwn && seenList.length > 0 && (
-          <div 
-            className="
-            text-xs 
-            font-light 
-            text-gray-500
-            "
-          >
-            {`Seen by ${seenList}`}
-          </div>
-        )}
       </div>
-    </div>
-   );
+  );
+
+
+
 }
  
 export default MessageBox;

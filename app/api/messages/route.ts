@@ -6,7 +6,7 @@ import prisma from "@/app/libs/prismadb";
 
 
 export async function POST(
-  request: Request,
+    request: Request,
 ) {
   try {
     const currentUser = await getCurrentUser();
@@ -44,7 +44,7 @@ export async function POST(
       }
     });
 
-    
+
     const updatedConversation = await prisma.conversation.update({
       where: {
         id: conversationId
