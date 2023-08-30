@@ -119,6 +119,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
           <div className={message}>
             <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
             {data.image ? (
+                <div>
                 <Image
                     alt="Image"
                     height="288"
@@ -127,13 +128,14 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                     src={data.image}
                     className="object-cover cursor-pointer hover:scale-110 transition translate"
                 />
+                </div>
             ) : (
                 <div className="flex items-center">
-                  {isOwn && (
-                      <span className="text-red-500 cursor-pointer hover:text-red-600 transition" onClick={handleDeleteMessage}>
-                        <FiTrash2 className="mr-1" />
-                      </span>
-                  )}
+                    {isOwn && (
+                        <span className="text-red-500 cursor-pointer hover:text-red-600 transition" onClick={handleDeleteMessage}>
+                          <FiTrash2 size={15} className="mr-1" />
+                        </span>
+                    )}
                   <span>{data.body}</span>
                 </div>
 

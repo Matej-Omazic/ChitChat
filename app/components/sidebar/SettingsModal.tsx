@@ -53,6 +53,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   }
 
   console.log("THEME: ", currentUser.isDarkTheme)
+  console.log("THEME: ", currentUser.status)
 
   const [isChecked, setIsChecked] = useState(currentUser.isDarkTheme || false);
 
@@ -91,6 +92,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
     // Add the isDarkTheme property to the data object
     data.isDarkTheme = isChecked;
+
+    // Add the status property to the data object
+    data.status = watch('status');
 
     axios.post('/api/settings', data)
         .then(() => {
@@ -149,7 +153,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   </CldUploadButton>
                 </div>
               </div>
-              
+
+
+              <div>
+                <label className="text-white block mb-1">Način putovanja</label>
+                <select
+                    value={watch('status')}
+                    {...register('status')}
+                >
+                  <option value="" hidden>
+                    Choose status
+                  </option>
+                  <option value="default">Default</option>
+                  <option value="away">Away</option>
+                  <option value="invisible">Invisible</option>
+                </select>
+              </div>
+
+
+
               <div>DARK MODE:
                 <div>
                   <label className="theme-switch" htmlFor="checkbox">

@@ -21,6 +21,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   isDarkTheme Boolean @default(false)
+  status String?
 
 
   conversationIds String[] @db.ObjectId

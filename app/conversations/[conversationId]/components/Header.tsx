@@ -13,6 +13,8 @@ import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from "./ProfileDrawer";
 import ConfirmModal from "@/app/conversations/[conversationId]/components/ConfirmModal";
+import Image from "next/image";
+import {FiTrash2} from "react-icons/fi";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -100,9 +102,20 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         )}
         <div className={divClassNameV3}>
           <div>{conversation.name || otherUser.name}</div>
-          <div className={divClassNameV2}>
-            {statusText}
-          </div>
+
+          {otherUser.status == "default" && (
+              <div className={divClassNameV2}>{statusText}</div>
+          )}
+          {otherUser.status == "away" && (
+              <div className="flex items-center">
+                <span className="block rounded-full bg-red-500 ring-2 ring-white h-2 w-2 md:h-3 md:w-3" />
+                <div className={divClassNameV2}>Away</div>
+              </div>
+          )}
+          {otherUser.status == "invisible" && (
+            <div className={divClassNameV2}>Offline</div>
+        )}
+
         </div>
       </div>
       <div>

@@ -119,7 +119,15 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             {title}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {statusText}
+                            {otherUser.status == "default" && (
+                                <div className={divClassNameV2}>{statusText}</div>
+                            )}
+                            {otherUser.status == "away" && (
+                                <div className={divClassNameV2}>Away</div>
+                            )}
+                            {otherUser.status == "invisible" && (
+                                <div className={divClassNameV2}>Offline</div>
+                            )}
                           </div>
                           {/*<div className="flex gap-10 my-8">*/}
                           {/*  <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">*/}
