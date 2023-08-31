@@ -10,7 +10,7 @@ import { FullMessageType } from "@/app/types";
 import Avatar from "@/app/components/Avatar";
 import ImageModal from "./ImageModal";
 import E2EE from '@chatereum/react-e2ee';
-import { FiTrash2 } from 'react-icons/fi'; // Import the delete icon from a library like react-icons
+import { FiTrash2, FiArchive } from 'react-icons/fi';
 
 
 interface MessageBoxProps {
@@ -99,6 +99,25 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     }
   };
 
+  const [showTranslation, setShowTranslation] = useState(false);
+  const [translatedText, setTranslatedText] = useState('');
+
+  const handleTranslate = async (langpair: string) => {
+    try {
+      if (!translatedText && data.body !== null) {
+        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(data.body)}&langpair=${langpair}`);
+        const responseData = await response.json();
+        setTranslatedText(responseData.responseData.translatedText);
+      }
+    } catch (error) {
+      console.error('Error translating text:', error);
+    }
+  };
+
+  const handleToggleTranslation = (langpair: string) => {
+    handleTranslate(langpair);
+    setShowTranslation(!showTranslation);
+  };
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -120,27 +139,41 @@ const MessageBox: React.FC<MessageBoxProps> = ({
             <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
             {data.image ? (
                 <div>
-                <Image
-                    alt="Image"
-                    height="288"
-                    width="288"
-                    onClick={() => setImageModalOpen(true)}
-                    src={data.image}
-                    className="object-cover cursor-pointer hover:scale-110 transition translate"
-                />
+                  <Image
+                      alt="Image"
+                      height="288"
+                      width="288"
+                      onClick={() => setImageModalOpen(true)}
+                      src={data.image}
+                      className="object-cover cursor-pointer hover:scale-110 translate"
+                  />
                 </div>
             ) : (
                 <div className="flex items-center">
-                    {isOwn && (
-                        <span className="text-red-500 cursor-pointer hover:text-red-600 transition" onClick={handleDeleteMessage}>
-                          <FiTrash2 size={15} className="mr-1" />
-                        </span>
-                    )}
+                  {isOwn && (
+                      <span className="text-red-500 cursor-pointer hover:text-red-600 " onClick={handleDeleteMessage}>
+                <FiTrash2 size={15} className="mr-1" />
+              </span>
+                  )}
                   <span>{data.body}</span>
+                  {!isOwn && (
+                      <span className="text-blue-600 cursor-pointer hover:text-blue-900 " onClick={() => handleToggleTranslation('hr|en')}>
+                        <span className="ml-2">EN</span>
+              </span>
+                  )}
+                  {!isOwn && (
+                      <span className="text-red-400 cursor-pointer hover:text-red-800 " onClick={() => handleToggleTranslation('en|hr')}>
+                <span className="ml-2">HR</span>
+              </span>
+                  )}
                 </div>
-
             )}
           </div>
+          {showTranslation && (
+              <div className={`${message} bg-gray-500`} >
+                {translatedText}
+              </div>
+          )}
           {isLast && isOwn && seenList.length > 0 && (
               <div className="text-xs font-light text-gray-500">
                 {`Seen by ${seenList}`}
@@ -149,7 +182,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({
         </div>
       </div>
   );
-
 
 
 }
