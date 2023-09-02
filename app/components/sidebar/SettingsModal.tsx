@@ -27,7 +27,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(currentUser, '&TEST_CURRENT_USER')
 
   const {
     register,
@@ -52,9 +51,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     });
   }
 
-  console.log("THEME: ", currentUser.isDarkTheme)
-  console.log("THEME: ", currentUser.status)
-
   const [isChecked, setIsChecked] = useState(currentUser.isDarkTheme || false);
 
   let checkTheme= currentUser.isDarkTheme
@@ -65,15 +61,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   else theme = "bright"
 
   localStorage.setItem("theme", theme)
-
-  useEffect(() => {
-    if (isChecked) {
-      console.log("It is checked");
-
-    } else {
-      console.log("It is not checked");
-    }
-  }, [isChecked]);
 
   let divClassName = `py-4 px-4 border-t flex items-center gap-2 lg:gap-4 w-full`;
 

@@ -15,7 +15,8 @@ export async function POST(
       message,
       image,
       conversationId,
-      encryptedMsg
+      encryptedMsg,
+      isLiked
     } = body;
 
     if (!currentUser?.id || !currentUser?.email) {
@@ -28,7 +29,7 @@ export async function POST(
         sender: true
       },
       data: {
-        body: message, encryptedMsg,
+        body: message, encryptedMsg, isLiked,
         image: image,
         conversation: {
           connect: { id: conversationId }

@@ -10,7 +10,8 @@ import { FullMessageType } from "@/app/types";
 import Avatar from "@/app/components/Avatar";
 import ImageModal from "./ImageModal";
 import E2EE from '@chatereum/react-e2ee';
-import { FiTrash2, FiArchive } from 'react-icons/fi';
+import { FiTrash2 } from 'react-icons/fi';
+import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 
 interface MessageBoxProps {
@@ -66,12 +67,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     // console.log("NOT ME: ", data?.sender?.email)
 
 
-
-    console.log("MSG: ", data.body)
-    console.log("MINE: ", isOwn)
-
     if(isOwn){
-      console.log("DATA: ", data.body)
       setRawMessage(data.body || "")
     }
     else{
@@ -121,6 +117,28 @@ const MessageBox: React.FC<MessageBoxProps> = ({
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+
+  const [messageData, setMessageData] = useState(data);
+  const handleLikeClick = async () => {
+    try {
+      // Toggle the isLiked property locally to provide immediate UI feedback
+      const updatedData = { ...messageData, isLiked: !messageData.isLiked };
+      // Update the UI with the new data
+      setMessageData(updatedData);
+
+      // Send a PUT request to update the isLiked property on the server
+      await fetch(`/api/messages/likedMessages/${messageData.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messageId: messageData.id, isLiked: !messageData.isLiked }), // Toggle the isLiked property
+      });
+    } catch (error) {
+      console.error("Error liking message:", error);
+    }
+  };
+
   return (
       <div className={container}>
         <div className={avatar}>
@@ -151,21 +169,41 @@ const MessageBox: React.FC<MessageBoxProps> = ({
             ) : (
                 <div className="flex items-center">
                   {isOwn && (
-                      <span className="text-red-500 cursor-pointer hover:text-red-600 " onClick={handleDeleteMessage}>
-                <FiTrash2 size={15} className="mr-1" />
-              </span>
+                      <>
+                    <span className="text-red-500 cursor-pointer hover:text-red-600 " onClick={handleDeleteMessage}>
+                        <FiTrash2 size={15} className="mr-1" />
+                      </span>
+                        <span className=" text-red-500 cursor-pointer hover:text-red-600">
+                            {!data.isLiked && (
+                                <AiOutlineLike size={18} className="mr-1"/>
+                            )}
+                            {data.isLiked && (
+                                <AiFillLike size={18} className="mr-1"/>
+                            )}
+                        </span>
+                      </>
                   )}
                   <span>{data.body}</span>
                   {!isOwn && (
                       <span className="text-blue-600 cursor-pointer hover:text-blue-900 " onClick={() => handleToggleTranslation('hr|en')}>
                         <span className="ml-2">EN</span>
-              </span>
+                      </span>
                   )}
                   {!isOwn && (
                       <span className="text-red-400 cursor-pointer hover:text-red-800 " onClick={() => handleToggleTranslation('en|hr')}>
-                <span className="ml-2">HR</span>
-              </span>
+                        <span className="ml-2">HR</span>
+                      </span>
                   )}
+                  {!isOwn && (
+                      <span className=" ml-3 text-blue-400 cursor-pointer hover:text-red-800 " onClick={handleLikeClick}>
+                      {!data.isLiked && (
+                          <AiOutlineLike size={18}/>
+                      )}
+                      {data.isLiked && (
+                         <AiFillLike size={18}/>
+                      )}
+                      </span>
+                )}
                 </div>
             )}
           </div>
