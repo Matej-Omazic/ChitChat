@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-import getCurrentUser from "@/app/actions/getCurrentUser";
-import { pusherServer } from '@/app/libs/pusher'
 import prisma from "@/app/libs/prismadb";
 
 
@@ -12,7 +10,6 @@ export async function PUT(
         const body = await request.json();
         const { messageId, isLiked } = body;
 
-        // Validate input here if necessary
 
         const updatedMessage = await prisma.message.update({
             where: {
@@ -23,7 +20,6 @@ export async function PUT(
             }
         });
 
-        // Check if the message was updated successfully
         if (!updatedMessage) {
             return new NextResponse('Message not found', { status: 404 });
         }
