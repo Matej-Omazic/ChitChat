@@ -91,15 +91,26 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
     divClassName += ` bg-white`;
   }
 
+  const handleDeleteMessage = (messageId: string) => {
+    // Filter out the deleted message from the messages array
+    setMessages((currentMessages) =>
+        currentMessages.filter((message) => message.id !== messageId)
+    );
+  };
+
+
+
+
   return ( 
     <>
     <div className={divClassName}>
       {messages.map((message, i) => (
-        <MessageBox 
-          isLast={i === messages.length - 1} 
-          key={message.id} 
-          data={message}
-        />
+          <MessageBox
+              isLast={i === messages.length - 1}
+              key={message.id}
+              data={message}
+              onDeleteMessage={handleDeleteMessage}
+          />
       ))}
       <div className="pt-24" ref={bottomRef} />
     </div>

@@ -17,12 +17,14 @@ import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 interface MessageBoxProps {
   data: FullMessageType;
   isLast?: boolean;
+  onDeleteMessage: (messageId: string) => void;
 }
 
 const MessageBox: React.FC<MessageBoxProps> = ({
-  data, 
-  isLast
-}) => {
+                                                 data,
+                                                 isLast,
+                                                 onDeleteMessage, // Receive the prop
+                                               }) => {
   const session = useSession();
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [rawMessage, setRawMessage] = useState("")
@@ -63,8 +65,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   }
 
   useEffect(()=>{
-    // console.log("ME: ", session.data?.user?.email)
-    // console.log("NOT ME: ", data?.sender?.email)
 
 
     if(isOwn){
@@ -79,16 +79,17 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   },[])
 
   const handleDeleteMessage = async () => {
-    let deleteMsgId = data.id
-    if (deleteMsgId) { // Ensure that deleteMsgId is set before proceeding
+    let deleteMsgId = data.id;
+    if (deleteMsgId) {
       try {
         await fetch(`/api/messages/${deleteMsgId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          // ... Other fetch options ...
         });
+
+        onDeleteMessage(deleteMsgId);
       } catch (error) {
         console.error("Error deleting message:", error);
       }
@@ -172,7 +173,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                     <span className="text-red-500 cursor-pointer hover:text-red-600 " onClick={handleDeleteMessage}>
                         <FiTrash2 size={15} className="mr-1" />
                       </span>
-                        <span className=" text-red-500 cursor-pointer hover:text-red-600">
+                        <span className=" text-yellow-300 cursor-pointer">
                             {!data.isLiked && (
                                 <AiOutlineLike size={18} className="mr-1"/>
                             )}

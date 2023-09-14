@@ -40,13 +40,15 @@ export async function DELETE(
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
+        const conversationId = existingMessage.conversation.id;
+
         await prisma.message.delete({
             where: {
                 id: messageId
             }
         });
 
-        const conversationId = existingMessage.conversation.id;
+        pusherServer.trigger(conversationId, 'messages:delete', { messageId });
 
         const updatedConversation = await prisma.conversation.update({
             where: {
@@ -66,10 +68,8 @@ export async function DELETE(
             }
         });
 
-        pusherServer.trigger(conversationId, 'messages:delete', { messageId });
-
         return NextResponse.json({ success: true });
     } catch (error) {
-        return NextResponse.json(null);
+        return new NextResponse('Error', { status: 500 });
     }
 }
